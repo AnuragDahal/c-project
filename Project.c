@@ -10,23 +10,20 @@ Submitted to : Department of Electronics & Computer Engineering, IOE Purwanchal 
 
 */
 
+
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-
 #define MAX_USERS 100
 #define MAX_EXPENSES 100
 
 // User structure
-typedef struct
-{
+typedef struct {
     char username[50];
     char password[50];
 } User;
 
 // Expense structure
-typedef struct
-{
+typedef struct {
     float amount;
     char date[20];
     char category[50];
@@ -48,16 +45,14 @@ int numUsers = 0;
 Expense expenses[MAX_EXPENSES];
 int numExpenses = 0;
 
-int main()
-{
+int main() {
     // Load data from files at the beginning
     loadUserData();
     loadExpenseData();
 
     int choice;
 
-    while (1)
-    {
+    while (1) {
         printf("\nExpense Tracker Menu:\n");
         printf("1. Register\n");
         printf("2. Login\n");
@@ -67,69 +62,53 @@ int main()
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice)
-        {
-        case 1:
-            registerUser();
-            break;
-        case 2:
-            if (loginUser())
-            {
-                printf("Login successful!\n");
-            }
-            else
-            {
-                printf("Invalid credentials. Please try again.\n");
-            }
-            break;
-        case 3:
-            if (numUsers == 0)
-            {
-                printf("You need to login first.\n");
-            }
-            else
-            {
-                recordExpense();
-            }
-            break;
-        case 4:
-            if (numUsers == 0)
-            {
-                printf("You need to login first.\n");
-            }
-            else
-            {
-                viewExpenses();
-            }
-            break;
-        case 5:
-            // Save data to files before exiting
-            saveUserData();
-            saveExpenseData();
-            printf("Exiting Expense Tracker. Goodbye!\n");
-            return 0;
-        default:
-            printf("Invalid choice. Please try again.\n");
+        switch (choice) {
+            case 1:
+                registerUser();
+                break;
+            case 2:
+                if (loginUser()) {
+                    printf("Login successful!\n");
+                } else {
+                    printf("Invalid credentials. Please try again.\n");
+                }
+                break;
+            case 3:
+                if (numUsers == 0) {
+                    printf("You need to login first.\n");
+                } else {
+                    recordExpense();
+                }
+                break;
+            case 4:
+                if (numUsers == 0) {
+                    printf("You need to login first.\n");
+                } else {
+                    viewExpenses();
+                }
+                break;
+            case 5:
+                // Save data to files before exiting
+                saveUserData();
+                saveExpenseData();
+                printf("Exiting Expense Tracker. Goodbye!\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
         }
     }
 
     return 0;
 }
 
-void registerUser()
-{
-    if (numUsers >= MAX_USERS)
-    {
+void registerUser() {
+    if (numUsers >= MAX_USERS) {
         printf("Maximum user limit reached. Cannot register new users.\n");
         return;
     }
 
     printf("Enter a unique username: ");
     scanf("%s", users[numUsers].username);
-    for (int i = 0; i < strlen(users[numUsers].username); i++)
-    {
-        users[numUsers].username[i] = tolower(users[numUsers].username[i]);
-    }
 
     printf("Enter your password: ");
     scanf("%s", users[numUsers].password);
@@ -137,25 +116,18 @@ void registerUser()
     numUsers++;
 }
 
-int loginUser()
-{
+int loginUser() {
     char username[50];
     char password[50];
 
     printf("Enter your username: ");
     scanf("%s", username);
-    for (int i = 0; i < strlen(username); i++)
-    {
-        username[i] = tolower(username[i]);
-    }
 
     printf("Enter your password: ");
     scanf("%s", password);
 
-    for (int i = 0; i < numUsers; i++)
-    {
-        if (strcmp(username, users[i].username) == 0 && strcmp(password, users[i].password) == 0)
-        {
+    for (int i = 0; i < numUsers; i++) {
+        if (strcmp(username, users[i].username) == 0 && strcmp(password, users[i].password) == 0) {
             return 1;
         }
     }
@@ -163,10 +135,8 @@ int loginUser()
     return 0;
 }
 
-void recordExpense()
-{
-    if (numExpenses >= MAX_EXPENSES)
-    {
+void recordExpense() {
+    if (numExpenses >= MAX_EXPENSES) {
         printf("Maximum expense limit reached. Cannot add new expenses.\n");
         return;
     }
@@ -188,45 +158,37 @@ void recordExpense()
     printf("Expense recorded successfully!\n");
 }
 
-void viewExpenses()
-{
+void viewExpenses() {
     printf("\n----- Your Expenses -----\n");
     printf("Date\t\tAmount\t\tCategory\n");
     printf("------------------------------------\n");
 
-    for (int i = 0; i < numExpenses; i++)
-    {
-        printf("%-10s\t%.2f\t%s\n", expenses[i].date, expenses[i].amount, expenses[i].category);
+    for (int i = 0; i < numExpenses; i++) {
+        printf("%s\t%.2f\t%s\n", expenses[i].date, expenses[i].amount, expenses[i].category);
     }
 }
 
-void saveUserData()
-{
+void saveUserData() {
     FILE *file = fopen("users.txt", "w");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("Error opening users file for writing.\n");
         return;
     }
 
-    for (int i = 0; i < numUsers; i++)
-    {
+    for (int i = 0; i < numUsers; i++) {
         fprintf(file, "%s %s\n", users[i].username, users[i].password);
     }
 
     fclose(file);
 }
 
-void loadUserData()
-{
+void loadUserData() {
     FILE *file = fopen("users.txt", "r");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("Error opening users file for reading. Creating new file...\n");
         // Create the file if it doesn't exist
         file = fopen("users.txt", "w");
-        if (file == NULL)
-        {
+        if (file == NULL) {
             printf("Error creating users file.\n");
             return;
         }
@@ -237,41 +199,34 @@ void loadUserData()
     // Reset the numUsers to zero before loading data
     numUsers = 0;
 
-    while (fscanf(file, "%s %s", users[numUsers].username, users[numUsers].password) == 2)
-    {
+    while (fscanf(file, "%s %s", users[numUsers].username, users[numUsers].password) == 2) {
         numUsers++;
     }
 
     fclose(file);
 }
 
-void saveExpenseData()
-{
+void saveExpenseData() {
     FILE *file = fopen("expenses.txt", "w");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("Error opening expenses file for writing.\n");
         return;
     }
 
-    for (int i = 0; i < numExpenses; i++)
-    {
+    for (int i = 0; i < numExpenses; i++) {
         fprintf(file, "%.2f %s %s\n", expenses[i].amount, expenses[i].date, expenses[i].category);
     }
 
     fclose(file);
 }
 
-void loadExpenseData()
-{
+void loadExpenseData() {
     FILE *file = fopen("expenses.txt", "r");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         printf("Error opening expenses file for reading. Creating new file...\n");
         // Create the file if it doesn't exist
         file = fopen("expenses.txt", "w");
-        if (file == NULL)
-        {
+        if (file == NULL) {
             printf("Error creating expenses file.\n");
             return;
         }
@@ -282,8 +237,7 @@ void loadExpenseData()
     // Reset the numExpenses to zero before loading data
     numExpenses = 0;
 
-    while (fscanf(file, "%f %s %s", &expenses[numExpenses].amount, expenses[numExpenses].date, expenses[numExpenses].category) == 3)
-    {
+    while (fscanf(file, "%f %s %s", &expenses[numExpenses].amount, expenses[numExpenses].date, expenses[numExpenses].category) == 3) {
         numExpenses++;
     }
 
